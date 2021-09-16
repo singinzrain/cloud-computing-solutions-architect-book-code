@@ -22,23 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+import urllib.request
+
 from flask import Flask
-import urllib2
+
 app = Flask(__name__)
+
 
 @app.route('/')
 def hello_world():
-    BASEURL='http://169.254.169.254/latest/meta-data/'
-	response = urllib2.urlopen(BASEURL+'hostname')
-	hostname = response.read()
-	response = urllib2.urlopen(BASEURL+'instance-id')
-	instanceid = response.read()
-	response = urllib2.urlopen(BASEURL+'public-ipv4')
-	publicipv4 = response.read()
+    BASEURL = 'http://169.254.169.254/latest/meta-data/'
+    charset = 'UTF-8'
+    response = urllib.request.urlopen(BASEURL + 'hostname')
+    hostname = response.read().decode(charset)
+    response = urllib.request.urlopen(BASEURL + 'instance-id')
+    instanceid = response.read().decode(charset)
+    response = urllib.request.urlopen(BASEURL + 'public-ipv4')
+    publicipv4 = response.read().decode(charset)
 
-	html = 'Hostname: '+hostname+'<br>'+'Instance-ID: '+\
-            instanceid+'<br>'+'Public-IP: '+publicipv4
-	return html
+    html = 'Hostname: ' + hostname + '<br>' + 'Instance-ID: ' + instanceid + '<br>' + 'Public-IP: ' + publicipv4
+    return html
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
